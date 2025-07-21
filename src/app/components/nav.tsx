@@ -13,8 +13,7 @@ export default function Navbar() {
                         
                     </div>
                     <div className="hidden md:flex items-center space-x-6">
-                        <a href="/" className="text-gray-700 hover:text-rose-600 transition-colors text-sm">Accueil</a>
-
+                            <Link href="/" className="text-gray-700 hover:text-rose-600 transition-colors text-sm">Accueil</Link>
 
 
                         <Link href="/marketplace">

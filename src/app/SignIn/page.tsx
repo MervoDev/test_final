@@ -14,7 +14,7 @@ export default function SigninPage() {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       router.push("/admin"); 
-    } catch (err: any) {
+    } catch (err:unknown) {
       console.error(err);
       setError("Email ou mot de passe invalide");
     }

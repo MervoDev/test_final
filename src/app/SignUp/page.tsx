@@ -71,7 +71,7 @@ export default function SignupPage() {
           onClick={handleSignUp}
           className="bg-blue-400 px-3 py-1.5 text-white my-3 rounded-md hover:bg-gray-700"
         >
-          S'inscrire
+         Inscription
         </button>
 
         <a href="/signin" className="text-red-500 hover:text-red-900 text-sm">
