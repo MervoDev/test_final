@@ -74,7 +74,7 @@ export default function SignupPage() {
          Inscription
         </button>
 
-        <a href="/signin" className="text-red-500 hover:text-red-900 text-sm">
+        <a href="/SignIn" className="text-red-500 hover:text-red-900 text-sm">
           Déjà un compte ? Se connecter
         </a>
       </form>
