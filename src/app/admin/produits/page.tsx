@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-
+import Image from "next/image";
 import { Plus, Search, Edit, Trash2 } from "lucide-react";
 import { Sidebar } from "../components/sidebar";
 import {
@@ -13,14 +13,24 @@ import {
 } from "firebase/firestore";
 import { db } from "../../../../lib/firebase";
 
+// Typage du produit
+interface Produit {
+  id: string;
+  nom: string;
+  reference?: string;
+  prix: string | number;
+  categorie: string;
+  statut: "Disponible" | "Indisponible";
+  images?: string[];
+}
+
 export default function ProduitsPage() {
   const [search, setSearch] = useState("");
-  const [produits, setProduits] = useState<any[]>([]);
-
+  const [produits, setProduits] = useState<Produit[]>([]);
   const [afficherFormulaire, setAfficherFormulaire] = useState(false);
   const [images, setImages] = useState<string[]>([""]);
   const [isEditing, setIsEditing] = useState(false);
-  const [produitActuel, setProduitActuel] = useState<any>(null);
+  const [produitActuel, setProduitActuel] = useState<Produit | null>(null);
 
   const CATEGORIES = [
     "Art de table",
@@ -31,7 +41,6 @@ export default function ProduitsPage() {
     "Outils & Accessoires",
     "Plantes artificielles",
     "Arche",
-    
   ];
 
   const produitsFiltres = produits.filter((p) =>
@@ -59,7 +68,7 @@ export default function ProduitsPage() {
     reference: "",
     prix: "",
     categorie: "",
-    statut: "Disponible",
+    statut: "Disponible" as "Disponible" | "Indisponible",
   });
 
   const handleFormChange = (
@@ -71,12 +80,11 @@ export default function ProduitsPage() {
   const fetchProduits = async () => {
     try {
       const querySnapshot = await getDocs(collection(db, "produits"));
-      const produitsList = querySnapshot.docs.map((doc) => ({
+      const produitsList: Produit[] = querySnapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
-      }));
-      console.log("Produits chargés :", produitsList);
-      setProduits(produitsList as any);
+      })) as Produit[];
+      setProduits(produitsList);
     } catch (error) {
       console.error("Erreur lors du chargement des produits :", error);
     }
@@ -86,7 +94,7 @@ export default function ProduitsPage() {
     fetchProduits();
   }, []);
 
-  const resetForm = async () => {
+  const resetForm = () => {
     setFormData({
       nom: "",
       reference: "",
@@ -115,37 +123,28 @@ export default function ProduitsPage() {
 
     try {
       if (isEditing && produitActuel) {
-        console.log("Modification produit ID Firestore :", produitActuel.id);
         const docRef = doc(db, "produits", produitActuel.id);
         await updateDoc(docRef, payload);
-        console.log("Produit modifié avec succès !");
       } else {
-        console.log("Ajout nouveau produit :", payload);
-        const docRef = await addDoc(collection(db, "produits"), {
+        await addDoc(collection(db, "produits"), {
           ...payload,
           createdAt: new Date(),
         });
-        console.log("Produit ajouté avec l'ID Firestore :", docRef.id);
       }
 
-      console.log("Avant fetchProduits()");
       await fetchProduits();
-      console.log("Après fetchProduits()");
-
-      console.log("Avant resetForm()");
-      await resetForm();
-      console.log("Après resetForm()");
+      resetForm();
     } catch (error) {
       console.error("Erreur Firebase :", error);
       alert("Erreur lors de l'enregistrement. Voir console.");
     }
   };
 
-  const handleEdit = (produit: any) => {
+  const handleEdit = (produit: Produit) => {
     setFormData({
       nom: produit.nom,
       reference: produit.reference || "",
-      prix: produit.prix,
+      prix:String(produit.prix),
       categorie: produit.categorie,
       statut: produit.statut,
     });
@@ -159,7 +158,6 @@ export default function ProduitsPage() {
     try {
       await deleteDoc(doc(db, "produits", id));
       setProduits((prev) => prev.filter((p) => p.id !== id));
-      console.log("Produit supprimé avec l'ID :", id);
     } catch (error) {
       console.error("Erreur lors de la suppression :", error);
     }
@@ -182,6 +180,7 @@ export default function ProduitsPage() {
           </button>
         </div>
 
+        {/* FORMULAIRE */}
         {afficherFormulaire && (
           <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 p-4 overflow-y-auto">
             <div className="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto transform transition-all duration-300 scale-95 hover:scale-100 border border-gray-100">
@@ -247,7 +246,6 @@ export default function ProduitsPage() {
                     required
                   >
                     <option value="">Sélectionnez une catégorie</option>
-
                     {CATEGORIES.map((cat) => (
                       <option key={cat} value={cat}>
                         {cat}
@@ -270,7 +268,7 @@ export default function ProduitsPage() {
                 </div>
 
                 <div className="md:col-span-2">
-                  <label className="block mb-1 font-medium">Images </label>
+                  <label className="block mb-1 font-medium">Images</label>
                   {images.map((img, index) => (
                     <div key={index} className="flex gap-2 mb-2">
                       <input
@@ -323,10 +321,7 @@ export default function ProduitsPage() {
         )}
 
         <div className="relative mb-6">
-          <Search
-            className="absolute left-3 top-2.5 text-gray-500"
-            size={20}
-          />
+          <Search className="absolute left-3 top-2.5 text-gray-500" size={20} />
           <input
             type="text"
             placeholder="Rechercher un produit..."
@@ -352,10 +347,12 @@ export default function ProduitsPage() {
               {produitsFiltres.map((produit) => (
                 <tr key={produit.id} className="border-b">
                   <td className="p-4">
-                    <img
+                    <Image
                       src={produit.images?.[0] || ""}
                       alt={produit.nom}
                       className="w-12 h-12 rounded object-cover"
+                      width={500}
+                      height={500}
                     />
                   </td>
                   <td className="p-4 font-medium">{produit.nom}</td>
