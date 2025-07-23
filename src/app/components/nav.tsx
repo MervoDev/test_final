@@ -1,6 +1,6 @@
 "use client"
 import Link from 'next/link';
-import React, { useState, useEffect } from 'react';
+
 import { ShoppingCart, Store, ShoppingBag } from "lucide-react";
 
 export default function Navbar() {

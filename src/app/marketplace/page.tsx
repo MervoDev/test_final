@@ -4,6 +4,7 @@ import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../../lib/firebase";
 import { Search } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 const imagesCarousel = [
     "/images/img1.jpg",
@@ -57,10 +58,12 @@ export default function BoutiquePage() {
 
          <div className="-mx-10 lg:-mx-50 mb-10">
             <div className="relative max-w-screen-xl mx-auto rounded-3xl overflow-hidden shadow-lg">
-                <img
+                <Image
                     src={imagesCarousel[carouselIndex]}
                     alt={`Slide ${carouselIndex + 1}`}
                     className="w-full h-64 md:h-[400px] object-cover rounded-3xl transition-all duration-700"
+                    width={48}
+                    height={48}
                 />
 
 

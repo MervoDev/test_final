@@ -1,6 +1,5 @@
 "use client";
 
-
 import { cn } from "../../utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -17,11 +16,9 @@ export function Sidebar() {
 
   const toggleExpanded = (title: string) => {
     setExpandedItems((prev) => (prev.includes(title) ? [] : [title]));
-
   };
 
   useEffect(() => {
-    
     NAV_DATA.some((section) => {
       return section.items.some((item) => {
         return item.items.some((subItem) => {
@@ -29,18 +26,15 @@ export function Sidebar() {
             if (!expandedItems.includes(item.title)) {
               toggleExpanded(item.title);
             }
-
-            
             return true;
           }
         });
       });
     });
-  }, [pathname]);
+  }, [pathname, expandedItems]); 
 
   return (
     <>
-      
       {isMobile && isOpen && (
         <div
           className="fixed inset-0 z-40 bg-black/50 transition-opacity duration-300"
@@ -53,7 +47,7 @@ export function Sidebar() {
         className={cn(
           "max-w-[290px] overflow-hidden border-r border-gray-200 bg-white transition-[width] duration-200 ease-linear dark:border-gray-800 dark:bg-gray-dark",
           isMobile ? "fixed bottom-0 top-0 z-50" : "sticky top-0 h-screen",
-          isOpen ? "w-full" : "w-0",
+          isOpen ? "w-full" : "w-0"
         )}
         aria-label="Main navigation"
         aria-hidden={!isOpen}
@@ -65,9 +59,7 @@ export function Sidebar() {
               href={"/"}
               onClick={() => isMobile && toggleSidebar()}
               className="px-0 py-2.5 min-[850px]:py-0"
-            >
-           
-            </Link>
+            ></Link>
 
             {isMobile && (
               <button
@@ -75,7 +67,6 @@ export function Sidebar() {
                 className="absolute left-3/4 right-4.5 top-1/2 -translate-y-1/2 text-right"
               >
                 <span className="sr-only">Close Menu</span>
-
                 <ArrowLeftIcon className="ml-auto size-7" />
               </button>
             )}
@@ -97,7 +88,7 @@ export function Sidebar() {
                           <div>
                             <MenuItem
                               isActive={item.items.some(
-                                ({ url }) => url === pathname,
+                                ({ url }) => url === pathname
                               )}
                               onClick={() => toggleExpanded(item.title)}
                             >
@@ -105,14 +96,11 @@ export function Sidebar() {
                                 className="size-6 shrink-0"
                                 aria-hidden="true"
                               />
-
                               <span>{item.title}</span>
-
                               <ChevronUp
                                 className={cn(
                                   "ml-auto rotate-180 transition-transform duration-200",
-                                  expandedItems.includes(item.title) &&
-                                    "rotate-0",
+                                  expandedItems.includes(item.title) && "rotate-0"
                                 )}
                                 aria-hidden="true"
                               />
@@ -156,7 +144,6 @@ export function Sidebar() {
                                   className="size-6 shrink-0"
                                   aria-hidden="true"
                                 />
-
                                 <span>{item.title}</span>
                               </MenuItem>
                             );
