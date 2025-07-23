@@ -40,7 +40,7 @@ export function Sidebar() {
 
   return (
     <>
-      {/* Mobile Overlay */}
+      
       {isMobile && isOpen && (
         <div
           className="fixed inset-0 z-40 bg-black/50 transition-opacity duration-300"
@@ -66,7 +66,7 @@ export function Sidebar() {
               onClick={() => isMobile && toggleSidebar()}
               className="px-0 py-2.5 min-[850px]:py-0"
             >
-              {/* <Logo /> */}
+           
             </Link>
 
             {isMobile && (

@@ -32,7 +32,7 @@ export const NAV_DATA: NavSection[] = [
       {
         title: "Produits",
         icon: Icons.Produits,
-        url: "/produits",
+        url: "/admin/produits",
         items: [],
       },
       {
