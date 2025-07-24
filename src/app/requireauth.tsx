@@ -17,7 +17,7 @@ export default function RequireAuth({ children }: { children: React.ReactNode })
         setAuthenticated(true);
       } else {
         console.log("❌ Utilisateur non connecté, redirection...");
-        router.replace("/connexion");
+        router.replace("/SignIn");
       }
       setLoading(false);
     });

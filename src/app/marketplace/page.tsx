@@ -144,7 +144,7 @@ export default function BoutiquePage() {
               </span>
 
               <Link
-                href={`/details/${produit.id}`}
+                href={`/marketplace/details/${produit.id}`}
                 className="block mt-4 text-center text-blue-600 hover:underline"
               >
                 Voir le produit →

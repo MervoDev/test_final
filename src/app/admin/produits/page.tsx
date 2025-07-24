@@ -180,7 +180,7 @@ export default function ProduitsPage() {
           </button>
         </div>
 
-        {/* FORMULAIRE */}
+       
         {afficherFormulaire && (
           <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 p-4 overflow-y-auto">
             <div className="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto transform transition-all duration-300 scale-95 hover:scale-100 border border-gray-100">
