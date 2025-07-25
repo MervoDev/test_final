@@ -16,7 +16,7 @@ export default function Navbar() {
                             {/* <Link href="/" className="text-gray-700 hover:text-rose-600 transition-colors text-sm">Accueil</Link> */}
 
 
-                        <Link href="/marketplace">
+                        <Link href="/">
                             <button className="flex items-center gap-2 bg-gradient-to-r from-pink-500 to-purple-600 text-white px-4 py-2 rounded-full hover:shadow-lg transition-all duration-300 hover:scale-105 text-sm">
                                 <Store className="w-4 h-4" />
                                 Marketplace
