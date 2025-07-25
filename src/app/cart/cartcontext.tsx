@@ -1,5 +1,13 @@
+// cartcontext.tsx
+
 "use client";
-import { createContext, useContext, useReducer, ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useReducer,
+  ReactNode,
+  Dispatch,
+} from "react";
 
 type Produit = {
   id: string;
@@ -16,22 +24,29 @@ type State = {
 type Action =
   | { type: "AJOUTER"; payload: Produit }
   | { type: "SUPPRIMER"; payload: string }
-  | { type: "VIDER" };
+  | { type: "VIDER" }
+  | { type: "INCREMENTER"; payload: string }
+  | { type: "DECREMENTER"; payload: string };
 
 const CartContext = createContext<{
   state: State;
-  dispatch: React.Dispatch<Action>;
-}>({ state: { panier: [] }, dispatch: () => null });
+  dispatch: Dispatch<Action>;
+}>({
+  state: { panier: [] },
+  dispatch: () => {},
+});
 
 const reducer = (state: State, action: Action): State => {
   switch (action.type) {
-    case "AJOUTER":
-      const exist = state.panier.find(p => p.id === action.payload.id);
+    case "AJOUTER": {
+      const exist = state.panier.find((p) => p.id === action.payload.id);
       if (exist) {
         return {
           ...state,
-          panier: state.panier.map(p =>
-            p.id === action.payload.id ? { ...p, quantite: p.quantite + 1 } : p
+          panier: state.panier.map((p) =>
+            p.id === action.payload.id
+              ? { ...p, quantite: p.quantite + 1 }
+              : p
           ),
         };
       }
@@ -39,15 +54,38 @@ const reducer = (state: State, action: Action): State => {
         ...state,
         panier: [...state.panier, { ...action.payload, quantite: 1 }],
       };
+    }
 
     case "SUPPRIMER":
       return {
         ...state,
-        panier: state.panier.filter(p => p.id !== action.payload),
+        panier: state.panier.filter((p) => p.id !== action.payload),
       };
 
     case "VIDER":
       return { panier: [] };
+
+    case "INCREMENTER":
+      return {
+        ...state,
+        panier: state.panier.map((p) =>
+          p.id === action.payload
+            ? { ...p, quantite: p.quantite + 1 }
+            : p
+        ),
+      };
+
+    case "DECREMENTER":
+      return {
+        ...state,
+        panier: state.panier
+          .map((p) =>
+            p.id === action.payload
+              ? { ...p, quantite: p.quantite - 1 }
+              : p
+          )
+          .filter((p) => p.quantite > 0),
+      };
 
     default:
       return state;
