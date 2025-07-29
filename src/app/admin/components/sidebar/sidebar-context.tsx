@@ -1,19 +1,48 @@
 "use client";
 
-import { useIsMobile } from "../../hooks/use-mobile";
-import { createContext, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  ReactNode,
+} from "react";
 
-type SidebarState = "expanded" | "collapsed";
-
-type SidebarContextType = {
-  state: SidebarState;
+interface SidebarContextType {
   isOpen: boolean;
-  setIsOpen: (open: boolean) => void;
   isMobile: boolean;
   toggleSidebar: () => void;
-};
+  setIsOpen: (open: boolean) => void; // <- AJOUTÉ
+}
 
-const SidebarContext = createContext<SidebarContextType | null>(null);
+const SidebarContext = createContext<SidebarContextType | undefined>(undefined);
+
+export function SidebarProvider({ children }: { children: ReactNode }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const mobile = window.innerWidth < 768;
+      setIsMobile(mobile);
+      setIsOpen(!mobile); // open by default on desktop
+    };
+
+    handleResize(); // trigger at mount
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const toggleSidebar = () => setIsOpen((prev) => !prev);
+
+  return (
+    <SidebarContext.Provider
+      value={{ isOpen, isMobile, toggleSidebar, setIsOpen }} // <- AJOUTÉ ICI
+    >
+      {children}
+    </SidebarContext.Provider>
+  );
+}
 
 export function useSidebarContext() {
   const context = useContext(SidebarContext);
@@ -21,41 +50,4 @@ export function useSidebarContext() {
     throw new Error("useSidebarContext must be used within a SidebarProvider");
   }
   return context;
-}
-
-export function SidebarProvider({
-  children,
-  defaultOpen = true,
-}: {
-  children: React.ReactNode;
-  defaultOpen?: boolean;
-}) {
-  const [isOpen, setIsOpen] = useState(defaultOpen);
-  const isMobile = useIsMobile();
-
-  useEffect(() => {
-    if (isMobile) {
-      setIsOpen(false);
-    } else {
-      setIsOpen(true);
-    }
-  }, [isMobile]);
-
-  function toggleSidebar() {
-    setIsOpen((prev) => !prev);
-  }
-
-  return (
-    <SidebarContext.Provider
-      value={{
-        state: isOpen ? "expanded" : "collapsed",
-        isOpen,
-        setIsOpen,
-        isMobile,
-        toggleSidebar,
-      }}
-    >
-      {children}
-    </SidebarContext.Provider>
-  );
 }

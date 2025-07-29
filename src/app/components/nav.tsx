@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { ShoppingCart, Store, ShoppingBag, Locate, Menu, X } from "lucide-react";
+import Image from "next/image";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -12,7 +13,9 @@ export default function Navbar() {
         <div className="flex items-center justify-between py-2">
         
           <div className="flex items-center gap-2">
-            <ShoppingBag size={40} className="text-black" />
+             
+              <Image src="/images/logo.png" alt="Logo" className="w-full h-full object-contain rounded-lg" width={50} height={50} />
+            
           </div>
 
          
