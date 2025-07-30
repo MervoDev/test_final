@@ -48,9 +48,9 @@ export const NAV_DATA: NavSection[] = [
         items: [],
       },
       {
-        title: "Compte",
-        icon: Icons.CompteIcon,
-        url: "/profile",
+        title: "Location",
+        icon: Icons.LocationIcon,
+        url: "/admin/location",
         items: [],
       },
     ],
